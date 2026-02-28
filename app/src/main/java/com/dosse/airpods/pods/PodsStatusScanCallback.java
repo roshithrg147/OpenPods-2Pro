@@ -14,17 +14,23 @@ import java.util.Objects;
 
 /**
  * TODO: proper javadoc
- * On a normal OS, we would use the bluetooth address of the device to filter out beacons from other devices.
- * UNFORTUNATELY, someone at google was so concerned about privacy (yea, as if they give a shit) that he decided it was a good idea to not allow access to the bluetooth address of incoming BLE beacons.
- * As a result, we have no reliable way to make sure that the beacon comes from YOUR airpods and not the guy sitting next to you on the bus.
+ * On a normal OS, we would use the bluetooth address of the device to filter
+ * out beacons from other devices.
+ * UNFORTUNATELY, someone at google was so concerned about privacy (yea, as if
+ * they give a shit) that he decided it was a good idea to not allow access to
+ * the bluetooth address of incoming BLE beacons.
+ * As a result, we have no reliable way to make sure that the beacon comes from
+ * YOUR airpods and not the guy sitting next to you on the bus.
  * What we did to workaround this issue is this:
- * - When a beacon arrives that looks like a pair of AirPods, look at the other beacons received in the last 10 seconds and get the strongest one
- * - If the strongest beacon's fake address is the same as this, use this beacon; otherwise use the strongest beacon
+ * - When a beacon arrives that looks like a pair of AirPods, look at the other
+ * beacons received in the last 10 seconds and get the strongest one
+ * - If the strongest beacon's fake address is the same as this, use this
+ * beacon; otherwise use the strongest beacon
  * - Filter for signals stronger than -60db
  * - Decode...
  */
 public abstract class PodsStatusScanCallback extends ScanCallback {
-    private static final long RECENT_BEACONS_MAX_T_NS = 10000000000L; //10s
+    private static final long RECENT_BEACONS_MAX_T_NS = 10000000000L; // 10s
 
     private static final int AIRPODS_MANUFACTURER = 76;
     private static final int AIRPODS_DATA_LENGTH = 27;
@@ -32,7 +38,7 @@ public abstract class PodsStatusScanCallback extends ScanCallback {
 
     private final List<ScanResult> mRecentBeacons = new ArrayList<>();
 
-    public abstract void onStatus(PodsStatus status);
+    public abstract void onStatus(String hexStatus);
 
     public static List<ScanFilter> getScanFilters() {
         byte[] manufacturerData = new byte[AIRPODS_DATA_LENGTH];
@@ -76,8 +82,10 @@ public abstract class PodsStatusScanCallback extends ScanCallback {
                 return;
             }
 
-            PodsStatus status = new PodsStatus(decodeResult(result));
-            onStatus(status);
+            String hex = decodeResult(result);
+            if (hex != null) {
+                onStatus(hex);
+            }
         } catch (Throwable t) {
             Logger.error(t);
         }
@@ -88,7 +96,8 @@ public abstract class PodsStatusScanCallback extends ScanCallback {
         ScanResult strongestBeacon = null;
 
         for (int i = 0; i < mRecentBeacons.size(); i++) {
-            if (SystemClock.elapsedRealtimeNanos() - mRecentBeacons.get(i).getTimestampNanos() > RECENT_BEACONS_MAX_T_NS) {
+            if (SystemClock.elapsedRealtimeNanos()
+                    - mRecentBeacons.get(i).getTimestampNanos() > RECENT_BEACONS_MAX_T_NS) {
                 mRecentBeacons.remove(i--);
                 continue;
             }
@@ -98,7 +107,8 @@ public abstract class PodsStatusScanCallback extends ScanCallback {
             }
         }
 
-        if (strongestBeacon != null && Objects.equals(strongestBeacon.getDevice().getAddress(), result.getDevice().getAddress())) {
+        if (strongestBeacon != null
+                && Objects.equals(strongestBeacon.getDevice().getAddress(), result.getDevice().getAddress())) {
             strongestBeacon = result;
         }
 

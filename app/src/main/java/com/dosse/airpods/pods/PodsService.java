@@ -25,10 +25,11 @@ import android.os.Looper;
 import android.os.ParcelUuid;
 import android.provider.Settings;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.dosse.airpods.R;
-import com.dosse.airpods.notification.NotificationThread;
+import com.dosse.airpods.notification.NotificationBuilder;
 import com.dosse.airpods.persistence.ConnectionDatabase;
 import com.dosse.airpods.persistence.ConnectionEvent;
 import com.dosse.airpods.pods.models.IPods;
@@ -60,8 +61,10 @@ public class PodsService extends Service {
     private BluetoothLeScanner mBluetoothScanner;
     private PodsStatus mStatus = PodsStatus.DISCONNECTED;
 
-    private static NotificationThread mNotificationThread = null;
-    private static boolean mMaybeConnected = false;
+    private NotificationBuilder mNotificationBuilder;
+    private NotificationManager mNotificationManager;
+    private boolean mNotificationShowing = false;
+    private boolean mMaybeConnected = false;
 
     private BroadcastReceiver mBluetoothReceiver = null;
     private BroadcastReceiver mScreenReceiver = null;
@@ -73,6 +76,7 @@ public class PodsService extends Service {
     private int mBatterySum = 0;
     private int mBatteryCount = 0;
     private final Executor mDbExecutor = Executors.newSingleThreadExecutor();
+    private final Executor mScanExecutor = Executors.newSingleThreadExecutor();
 
     // Active connection tracking
     public static final String ACTION_STATUS_UPDATE = "com.dosse.airpods.STATUS_UPDATE";
@@ -106,6 +110,26 @@ public class PodsService extends Service {
         return true;
     }
 
+    private final Runnable mNotificationRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mMaybeConnected && !mStatus.isAllDisconnected()) {
+                if (!mNotificationShowing) {
+                    Logger.debug("Creating notification via Handler");
+                    mNotificationShowing = true;
+                }
+                mNotificationManager.notify(NotificationBuilder.NOTIFICATION_ID, mNotificationBuilder.build(mStatus));
+            } else {
+                if (mNotificationShowing) {
+                    Logger.debug("Removing notification via Handler");
+                    mNotificationShowing = false;
+                    mNotificationManager.cancel(NotificationBuilder.NOTIFICATION_ID);
+                }
+            }
+            mHandler.postDelayed(this, 1000); // 1 second interval replacing Thread.sleep
+        }
+    };
+
     @SuppressLint("MissingPermission")
     private synchronized void connectGatt() {
         if (mGatt != null || mConnectedDevice == null || !mMaybeConnected)
@@ -128,6 +152,7 @@ public class PodsService extends Service {
             mGatt = null;
         }
         mHandler.removeCallbacks(mTimeoutRunnable);
+        mHandler.removeCallbacks(mNotificationRunnable);
     }
 
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
@@ -292,8 +317,11 @@ public class PodsService extends Service {
 
             mScanCallback = new PodsStatusScanCallback() {
                 @Override
-                public void onStatus(PodsStatus newStatus) {
-                    handleStatusUpdate(newStatus);
+                public void onStatus(final String hexStatus) {
+                    mScanExecutor.execute(() -> {
+                        final PodsStatus newStatus = new PodsStatus(hexStatus);
+                        mHandler.post(() -> handleStatusUpdate(newStatus));
+                    });
                 }
             };
 
@@ -336,6 +364,20 @@ public class PodsService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationChannel channel = new NotificationChannel(NotificationBuilder.TAG, NotificationBuilder.TAG,
+                NotificationManager.IMPORTANCE_LOW);
+        channel.setSound(null, null);
+        channel.enableVibration(false);
+        channel.enableLights(false);
+        channel.setShowBadge(false);
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        mNotificationManager.createNotificationChannel(channel);
+
+        mNotificationBuilder = new NotificationBuilder(this);
+        mHandler.post(mNotificationRunnable);
+
         startForeground(101, createBackgroundNotification());
 
         unregisterBtReceiver();
@@ -382,7 +424,8 @@ public class PodsService extends Service {
         };
 
         try {
-            registerReceiver(mBluetoothReceiver, BluetoothReceiver.buildFilter());
+            ContextCompat.registerReceiver(this, mBluetoothReceiver, BluetoothReceiver.buildFilter(),
+                    ContextCompat.RECEIVER_NOT_EXPORTED);
         } catch (Throwable t) {
             Logger.error(t);
         }
@@ -445,7 +488,8 @@ public class PodsService extends Service {
             };
 
             try {
-                registerReceiver(mScreenReceiver, ScreenReceiver.buildFilter());
+                ContextCompat.registerReceiver(this, mScreenReceiver, ScreenReceiver.buildFilter(),
+                        ContextCompat.RECEIVER_NOT_EXPORTED);
             } catch (Throwable t) {
                 Logger.error(t);
             }
@@ -481,24 +525,14 @@ public class PodsService extends Service {
         endSession();
         unregisterBtReceiver();
         unregisterScreenReceiver();
+        mHandler.removeCallbacksAndMessages(null);
+        if (mNotificationManager != null) {
+            mNotificationManager.cancelAll();
+        }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (mNotificationThread == null || !mNotificationThread.isAlive()) {
-            mNotificationThread = new NotificationThread(this) {
-                @Override
-                public boolean isConnected() {
-                    return mMaybeConnected;
-                }
-
-                @Override
-                public PodsStatus getStatus() {
-                    return mStatus;
-                }
-            };
-            mNotificationThread.start();
-        }
         return START_STICKY;
     }
 
