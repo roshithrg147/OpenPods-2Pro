@@ -9,4 +9,14 @@ public class SharedPreferencesUtils {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean("batterySaver", false);
     }
+
+    public static boolean isAutoPauseEnabled(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean("autoPause", false);
+    }
+
+    public static boolean isLowLatencyEnabled(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean("lowLatency", false);
+    }
 }

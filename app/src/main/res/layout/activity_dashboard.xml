@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgColorPrimary"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Header / Title -->
+    <TextView
+        android:id="@+id/dash_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="Connected Device"
+        android:textColor="@color/textColorPrimary"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <!-- Model Subtitle -->
+    <TextView
+        android:id="@+id/dash_model"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="Loading Model..."
+        android:textColor="@color/textColorSecondary"
+        android:textSize="14sp" />
+
+    <!-- Battery Panel Container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <!-- Left Pod Container -->
+        <LinearLayout
+            android:id="@+id/dash_left_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/dash_left_img"
+                android:layout_width="60dp"
+                android:layout_height="120dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/pod" />
+            
+            <ImageView
+                android:id="@+id/dash_left_inear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_inear_24dp"
+                android:visibility="invisible" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+                
+                <TextView
+                    android:id="@+id/dash_left_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textColorPrimary"
+                    android:textSize="18sp"
+                    android:text="--" />
+
+                <ImageView
+                    android:id="@+id/dash_left_charging"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="4dp"
+                    android:src="@drawable/ic_battery_charging_full_green_24dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Right Pod Container -->
+        <LinearLayout
+            android:id="@+id/dash_right_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/dash_right_img"
+                android:layout_width="60dp"
+                android:layout_height="120dp"
+                android:scaleType="fitCenter"
+                android:scaleX="-1"
+                android:src="@drawable/pod" />
+                
+            <ImageView
+                android:id="@+id/dash_right_inear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleX="-1"
+                android:src="@drawable/ic_inear_24dp"
+                android:visibility="invisible" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+                
+                <TextView
+                    android:id="@+id/dash_right_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textColorPrimary"
+                    android:textSize="18sp"
+                    android:text="--" />
+
+                <ImageView
+                    android:id="@+id/dash_right_charging"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="4dp"
+                    android:src="@drawable/ic_battery_charging_full_green_24dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Case Container -->
+        <LinearLayout
+            android:id="@+id/dash_case_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/dash_case_img"
+                android:layout_width="80dp"
+                android:layout_height="120dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/pod_case" />
+                
+            <!-- Placeholder for alignment with inear icons -->
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:visibility="invisible" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+                
+                <TextView
+                    android:id="@+id/dash_case_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textColorPrimary"
+                    android:textSize="18sp"
+                    android:text="--" />
+
+                <ImageView
+                    android:id="@+id/dash_case_charging"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="4dp"
+                    android:src="@drawable/ic_battery_charging_full_green_24dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="24dp"
+        android:background="@android:color/darker_gray" />
+
+    <!-- Button Configurations Section -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Active Features (GATT)"
+        android:textColor="@color/textColorPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <Switch
+        android:id="@+id/dash_switch_autopause"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="In-Ear Auto Pause"
+        android:textColor="@color/textColorPrimary" />
+        
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Automatically pauses media playback when an earbud is removed."
+        android:textColor="@color/textColorSecondary"
+        android:textSize="12sp"
+        android:layout_marginTop="-8dp"/>
+
+    <Switch
+        android:id="@+id/dash_switch_lowlatency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Low Latency Game Mode"
+        android:textColor="@color/textColorPrimary" />
+        
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pings Bluetooth stack to prioritize polling rate over battery width."
+        android:textColor="@color/textColorSecondary"
+        android:textSize="12sp" />
+
+</LinearLayout>

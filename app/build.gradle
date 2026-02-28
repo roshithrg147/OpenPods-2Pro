@@ -12,6 +12,12 @@ android {
         targetSdk 36
         versionCode 24
         versionName '1.11'
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -33,4 +39,9 @@ android {
 dependencies {
     implementation libs.androidx.appcompat
     implementation libs.androidx.preference
+    implementation libs.androidx.room.runtime
+    implementation libs.google.material
+    implementation libs.androidx.coordinatorlayout
+    implementation libs.androidx.recyclerview
+    annotationProcessor libs.androidx.room.compiler
 }

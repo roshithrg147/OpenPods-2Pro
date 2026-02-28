@@ -13,6 +13,20 @@
             android:title="@string/batterySaver"
             app:iconSpaceReserved="false" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="autoPause"
+            android:summary="@string/autoPause_desc"
+            android:title="@string/autoPause"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="lowLatency"
+            android:summary="@string/lowLatency_desc"
+            android:title="@string/lowLatency"
+            app:iconSpaceReserved="false" />
+
         <Preference
             android:key="restartService"
             android:summary="@string/restart_desc"

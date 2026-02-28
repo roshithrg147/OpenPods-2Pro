@@ -45,6 +45,10 @@
     <string name="settings" tools:ignore="MissingTranslation">Settings</string>
     <string name="batterySaver">Battery saver (Not recommended)</string>
     <string name="batterySaver_desc">Enable this if Bluetooth uses a lot of battery</string>
+    <string name="autoPause">Auto-Pause</string>
+    <string name="autoPause_desc">Pause media when an earbud is removed</string>
+    <string name="lowLatency">Low Latency Mode</string>
+    <string name="lowLatency_desc">Prioritize Bluetooth connection speed for gaming</string>
     <string name="restart" tools:ignore="MissingTranslation">Restart Service</string>
     <string name="restart_desc" tools:ignore="MissingTranslation">Do this if the notification is not showing</string>
 

@@ -19,24 +19,33 @@ import com.dosse.airpods.pods.models.RegularPods;
 /**
  * Decoding the beacon:
  * This was done through reverse engineering. Hopefully it's correct.
- * - The beacon coming from a pair of AirPods/Beats contains a manufacturer specific data field n°76 of 27 bytes
+ * - The beacon coming from a pair of AirPods/Beats contains a manufacturer
+ * specific data field n°76 of 27 bytes
  * - We convert this data to a hexadecimal string
- * - The 12th and 13th characters in the string represent the charge of the left and right pods.
- * Under unknown circumstances[1], they are right and left instead (see isFlipped). Values between 0 and 10 are battery 0-100%; Value 15 means it's disconnected
- * - The 15th character in the string represents the charge of the case. Values between 0 and 10 are battery 0-100%; Value 15 means it's disconnected
+ * - The 12th and 13th characters in the string represent the charge of the left
+ * and right pods.
+ * Under unknown circumstances[1], they are right and left instead (see
+ * isFlipped). Values between 0 and 10 are battery 0-100%; Value 15 means it's
+ * disconnected
+ * - The 15th character in the string represents the charge of the case. Values
+ * between 0 and 10 are battery 0-100%; Value 15 means it's disconnected
  * - The 14th character in the string represents the "in charge" status.
- * Bit 0 (LSB) is the left pod; Bit 1 is the right pod; Bit 2 is the case. Bit 3 might be case open/closed but I'm not sure and it's not used
- * - The 11th character in the string represents the in-ear detection status. Bit 1 is the left pod; Bit 3 is the right pod.
+ * Bit 0 (LSB) is the left pod; Bit 1 is the right pod; Bit 2 is the case. Bit 3
+ * might be case open/closed but I'm not sure and it's not used
+ * - The 11th character in the string represents the in-ear detection status.
+ * Bit 1 is the left pod; Bit 3 is the right pod.
  * - The 7th character in the string represents the model
  * <p>
  * Notes:
- * 1) - isFlipped set by bit 1 of 10th character in the string; seems to be related to in-ear detection;
+ * 1) - isFlipped set by bit 1 of 10th character in the string; seems to be
+ * related to in-ear detection;
  */
 public class PodsStatus {
     public static final PodsStatus DISCONNECTED = new PodsStatus();
 
     private IPods mPods;
     private final long mTimestamp = System.currentTimeMillis();
+    private String mRawHex = null;
 
     private PodsStatus() {
     }
@@ -45,14 +54,19 @@ public class PodsStatus {
         if (status == null)
             return;
 
+        this.mRawHex = status;
+
         boolean flip = isFlipped(status);
 
-        int leftStatus = Integer.parseInt("" + status.charAt(flip ? 12 : 13), 16); // Left airpod (0-10 batt; 15=disconnected)
-        int rightStatus = Integer.parseInt("" + status.charAt(flip ? 13 : 12), 16); // Right airpod (0-10 batt; 15=disconnected)
+        int leftStatus = Integer.parseInt("" + status.charAt(flip ? 12 : 13), 16); // Left airpod (0-10 batt;
+                                                                                   // 15=disconnected)
+        int rightStatus = Integer.parseInt("" + status.charAt(flip ? 13 : 12), 16); // Right airpod (0-10 batt;
+                                                                                    // 15=disconnected)
         int caseStatus = Integer.parseInt("" + status.charAt(15), 16); // Case (0-10 batt; 15=disconnected)
         int singleStatus = Integer.parseInt("" + status.charAt(13), 16); // Single (0-10 batt; 15=disconnected)
 
-        int chargeStatus = Integer.parseInt("" + status.charAt(14), 16); // Charge status (bit 0=left; bit 1=right; bit 2=case)
+        int chargeStatus = Integer.parseInt("" + status.charAt(14), 16); // Charge status (bit 0=left; bit 1=right; bit
+                                                                         // 2=case)
 
         boolean chargeL = (chargeStatus & (flip ? 0b00000010 : 0b00000001)) != 0;
         boolean chargeR = (chargeStatus & (flip ? 0b00000001 : 0b00000010)) != 0;
@@ -122,5 +136,9 @@ public class PodsStatus {
 
     public long getTimestamp() {
         return mTimestamp;
+    }
+
+    public String getRawHex() {
+        return mRawHex;
     }
 }
