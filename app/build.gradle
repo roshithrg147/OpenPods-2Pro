@@ -43,5 +43,6 @@ dependencies {
     implementation libs.google.material
     implementation libs.androidx.coordinatorlayout
     implementation libs.androidx.recyclerview
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
     annotationProcessor libs.androidx.room.compiler
 }

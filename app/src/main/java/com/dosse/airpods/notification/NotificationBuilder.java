@@ -33,8 +33,10 @@ public class NotificationBuilder {
         mBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         mBuilder.setCustomContentView(mRemoteViews[1]);
         mBuilder.setCustomBigContentView(mRemoteViews[0]);
-        mBuilder.setStyle(new NotificationCompat.DecoratedCustomViewStyle()); //Make the notification extendable issue #165
-        mBuilder.setCategory(NotificationCompat.CATEGORY_SERVICE); //show notification on android 12 and above #144 #143
+        mBuilder.setStyle(new NotificationCompat.DecoratedCustomViewStyle()); // Make the notification extendable issue
+                                                                              // #165
+        mBuilder.setCategory(NotificationCompat.CATEGORY_SERVICE); // show notification on android 12 and above #144
+                                                                   // #143
     }
 
     public Notification build(PodsStatus status) {
@@ -44,62 +46,83 @@ public class NotificationBuilder {
 
         for (RemoteViews notification : mRemoteViews) {
             if (!single) {
-                notification.setImageViewResource(R.id.leftPodImg, ((RegularPods)airpods).getLeftDrawable());
-                notification.setImageViewResource(R.id.rightPodImg, ((RegularPods)airpods).getRightDrawable());
-                notification.setImageViewResource(R.id.podCaseImg, ((RegularPods)airpods).getCaseDrawable());
+                notification.setImageViewResource(R.id.leftPodImg, ((RegularPods) airpods).getLeftDrawable());
+                notification.setImageViewResource(R.id.rightPodImg, ((RegularPods) airpods).getRightDrawable());
+                notification.setImageViewResource(R.id.podCaseImg, ((RegularPods) airpods).getCaseDrawable());
             } else {
-                notification.setImageViewResource(R.id.podCaseImg, ((SinglePods)airpods).getDrawable());
+                notification.setImageViewResource(R.id.podCaseImg, ((SinglePods) airpods).getDrawable());
             }
 
             notification.setViewVisibility(R.id.leftPod, single ? View.GONE : View.VISIBLE);
             notification.setViewVisibility(R.id.rightPod, single ? View.GONE : View.VISIBLE);
         }
 
-        if (isFreshStatus(status)) for (RemoteViews notification : mRemoteViews) {
-            notification.setViewVisibility(R.id.leftPodText, View.VISIBLE);
-            notification.setViewVisibility(R.id.rightPodText, View.VISIBLE);
-            notification.setViewVisibility(R.id.podCaseText, View.VISIBLE);
-            notification.setViewVisibility(R.id.leftPodUpdating, View.INVISIBLE);
-            notification.setViewVisibility(R.id.rightPodUpdating, View.INVISIBLE);
-            notification.setViewVisibility(R.id.podCaseUpdating, View.INVISIBLE);
+        if (isFreshStatus(status))
+            for (RemoteViews notification : mRemoteViews) {
+                notification.setViewVisibility(R.id.leftPodText, View.VISIBLE);
+                notification.setViewVisibility(R.id.rightPodText, View.VISIBLE);
+                notification.setViewVisibility(R.id.podCaseText, View.VISIBLE);
+                notification.setViewVisibility(R.id.leftPodUpdating, View.INVISIBLE);
+                notification.setViewVisibility(R.id.rightPodUpdating, View.INVISIBLE);
+                notification.setViewVisibility(R.id.podCaseUpdating, View.INVISIBLE);
 
-            if (!single) {
-                RegularPods regularPods = (RegularPods)airpods;
+                if (!single) {
+                    RegularPods regularPods = (RegularPods) airpods;
 
-                notification.setTextViewText(R.id.leftPodText, regularPods.getParsedStatus(RegularPods.LEFT));
-                notification.setTextViewText(R.id.rightPodText, regularPods.getParsedStatus(RegularPods.RIGHT));
-                notification.setTextViewText(R.id.podCaseText, regularPods.getParsedStatus(RegularPods.CASE));
+                    notification.setTextViewText(R.id.leftPodText, regularPods.getParsedStatus(RegularPods.LEFT));
+                    notification.setTextViewText(R.id.rightPodText, regularPods.getParsedStatus(RegularPods.RIGHT));
+                    notification.setTextViewText(R.id.podCaseText, regularPods.getParsedStatus(RegularPods.CASE));
 
-                notification.setImageViewResource(R.id.leftBatImg, regularPods.getBatImgSrcId(RegularPods.LEFT));
-                notification.setImageViewResource(R.id.rightBatImg, regularPods.getBatImgSrcId(RegularPods.RIGHT));
-                notification.setImageViewResource(R.id.caseBatImg, regularPods.getBatImgSrcId(RegularPods.CASE));
+                    notification.setImageViewResource(R.id.leftBatImg, regularPods.getBatImgSrcId(RegularPods.LEFT));
+                    notification.setImageViewResource(R.id.rightBatImg, regularPods.getBatImgSrcId(RegularPods.RIGHT));
+                    notification.setImageViewResource(R.id.caseBatImg, regularPods.getBatImgSrcId(RegularPods.CASE));
 
-                notification.setViewVisibility(R.id.leftBatImg, regularPods.getBatImgVisibility(RegularPods.LEFT));
-                notification.setViewVisibility(R.id.rightBatImg, regularPods.getBatImgVisibility(RegularPods.RIGHT));
-                notification.setViewVisibility(R.id.caseBatImg, regularPods.getBatImgVisibility(RegularPods.CASE));
+                    notification.setViewVisibility(R.id.leftBatImg, regularPods.getBatImgVisibility(RegularPods.LEFT));
+                    notification.setViewVisibility(R.id.rightBatImg,
+                            regularPods.getBatImgVisibility(RegularPods.RIGHT));
+                    notification.setViewVisibility(R.id.caseBatImg, regularPods.getBatImgVisibility(RegularPods.CASE));
 
-                notification.setViewVisibility(R.id.leftInEarImg, regularPods.getInEarVisibility(RegularPods.LEFT));
-                notification.setViewVisibility(R.id.rightInEarImg, regularPods.getInEarVisibility(RegularPods.RIGHT));
-            } else {
-                SinglePods singlePods = (SinglePods)airpods;
+                    notification.setViewVisibility(R.id.leftInEarImg, regularPods.getInEarVisibility(RegularPods.LEFT));
+                    notification.setViewVisibility(R.id.rightInEarImg,
+                            regularPods.getInEarVisibility(RegularPods.RIGHT));
 
-                notification.setTextViewText(R.id.podCaseText, singlePods.getParsedStatus());
-                notification.setImageViewResource(R.id.caseBatImg, singlePods.getBatImgSrcId());
-                notification.setViewVisibility(R.id.caseBatImg, singlePods.getBatImgVisibility());
+                    // Programmatic WCAG Accessibility Updates for Status changes
+                    notification.setContentDescription(R.id.leftPod, "Left Pod: "
+                            + regularPods.getParsedStatus(RegularPods.LEFT)
+                            + (regularPods.getBatImgVisibility(RegularPods.LEFT) == View.VISIBLE ? " Charging" : ""));
+                    notification.setContentDescription(R.id.rightPod, "Right Pod: "
+                            + regularPods.getParsedStatus(RegularPods.RIGHT)
+                            + (regularPods.getBatImgVisibility(RegularPods.RIGHT) == View.VISIBLE ? " Charging" : ""));
+                    notification.setContentDescription(R.id.podCase, "Case: "
+                            + regularPods.getParsedStatus(RegularPods.CASE)
+                            + (regularPods.getBatImgVisibility(RegularPods.CASE) == View.VISIBLE ? " Charging" : ""));
+
+                } else {
+                    SinglePods singlePods = (SinglePods) airpods;
+
+                    notification.setTextViewText(R.id.podCaseText, singlePods.getParsedStatus());
+                    notification.setImageViewResource(R.id.caseBatImg, singlePods.getBatImgSrcId());
+                    notification.setViewVisibility(R.id.caseBatImg, singlePods.getBatImgVisibility());
+
+                    // WCAG Single Pod update
+                    notification.setContentDescription(R.id.podCase, "Pod: " + singlePods.getParsedStatus()
+                            + (singlePods.getBatImgVisibility() == View.VISIBLE ? " Charging" : ""));
+                }
             }
-        } else for (RemoteViews notification : mRemoteViews) {
-            notification.setViewVisibility(R.id.leftPodText, View.INVISIBLE);
-            notification.setViewVisibility(R.id.rightPodText, View.INVISIBLE);
-            notification.setViewVisibility(R.id.podCaseText, View.INVISIBLE);
-            notification.setViewVisibility(R.id.leftBatImg, View.GONE);
-            notification.setViewVisibility(R.id.rightBatImg, View.GONE);
-            notification.setViewVisibility(R.id.caseBatImg, View.GONE);
-            notification.setViewVisibility(R.id.leftPodUpdating, View.VISIBLE);
-            notification.setViewVisibility(R.id.rightPodUpdating, View.VISIBLE);
-            notification.setViewVisibility(R.id.podCaseUpdating, View.VISIBLE);
-            notification.setViewVisibility(R.id.leftInEarImg, View.INVISIBLE);
-            notification.setViewVisibility(R.id.rightInEarImg, View.INVISIBLE);
-        }
+        else
+            for (RemoteViews notification : mRemoteViews) {
+                notification.setViewVisibility(R.id.leftPodText, View.INVISIBLE);
+                notification.setViewVisibility(R.id.rightPodText, View.INVISIBLE);
+                notification.setViewVisibility(R.id.podCaseText, View.INVISIBLE);
+                notification.setViewVisibility(R.id.leftBatImg, View.GONE);
+                notification.setViewVisibility(R.id.rightBatImg, View.GONE);
+                notification.setViewVisibility(R.id.caseBatImg, View.GONE);
+                notification.setViewVisibility(R.id.leftPodUpdating, View.VISIBLE);
+                notification.setViewVisibility(R.id.rightPodUpdating, View.VISIBLE);
+                notification.setViewVisibility(R.id.podCaseUpdating, View.VISIBLE);
+                notification.setViewVisibility(R.id.leftInEarImg, View.INVISIBLE);
+                notification.setViewVisibility(R.id.rightInEarImg, View.INVISIBLE);
+            }
 
         return mBuilder.build();
     }

@@ -23,6 +23,7 @@
         android:required="false" />
 
     <application
+        android:name=".OpenPodsApp"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"

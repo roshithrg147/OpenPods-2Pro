@@ -21,7 +21,24 @@
     <string name="msg_notif_perm" tools:ignore="MissingTranslation">Notification Permission not granted, please enable it in settings.</string>
 
     <string name="main_description">The app will show a notification when your AirPods are connected</string>
-    <string name="supportedDevicesTitle"><u>Supported devices:</u></string>
+    <string name="supportedDevicesTitle">Supported Devices</string>
+
+    <string-array name="supported_devices">
+        <item>Apple AirPods 1st gen</item>
+        <item>Apple AirPods 2nd gen</item>
+        <item>Apple AirPods 3rd gen</item>
+        <item>Apple AirPods Pro</item>
+        <item>Apple AirPods Pro 2</item>
+        <item>Apple AirPods Pro 3</item>
+        <item>Apple AirPods Max</item>
+        <item>Beats X</item>
+        <item>Beats Flex</item>
+        <item>Beats Solo 3</item>
+        <item>Beats Studio 3</item>
+        <item>Powerbeats 3</item>
+        <item>Powerbeats Pro</item>
+    </string-array>
+
     <string name="airpods1">&#8226; Apple AirPods 1st gen</string>
     <string name="airpods2">&#8226; Apple AirPods 2nd gen</string>
     <string name="airpods3" tools:ignore="MissingTranslation">&#8226; Apple AirPods 3rd gen</string>

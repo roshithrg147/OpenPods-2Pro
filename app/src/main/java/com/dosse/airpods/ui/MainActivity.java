@@ -21,6 +21,9 @@ import com.dosse.airpods.persistence.ConnectionEvent;
 import com.dosse.airpods.receivers.StartupReceiver;
 import com.dosse.airpods.utils.MIUIWarning;
 import com.dosse.airpods.utils.PermissionUtils;
+import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
 import java.util.Locale;
@@ -31,6 +34,7 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity {
     private ConnectionAdapter adapter;
     private final Executor executor = Executors.newSingleThreadExecutor();
+    private ShimmerFrameLayout shimmerContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +66,21 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, DashboardActivity.class));
         });
 
+        shimmerContainer = findViewById(R.id.shimmer_view_container);
+        setupChips();
         setupHistory();
+    }
+
+    private void setupChips() {
+        ChipGroup chipGroup = findViewById(R.id.supported_devices_chipgroup);
+        String[] supportedDevices = getResources().getStringArray(R.array.supported_devices);
+
+        for (String deviceName : supportedDevices) {
+            Chip chip = new Chip(this);
+            chip.setText(deviceName);
+            chip.setClickable(false);
+            chipGroup.addView(chip);
+        }
     }
 
     private void setupHistory() {
@@ -75,6 +93,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadHistory() {
+        // Start perceived latency proxy
+        shimmerContainer.startShimmer();
+        shimmerContainer.setVisibility(android.view.View.VISIBLE);
+
         executor.execute(() -> {
             long oneWeekAgo = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000L);
             List<ConnectionEvent> events = ConnectionDatabase.getDatabase(this).connectionDao()
@@ -92,6 +114,10 @@ public class MainActivity extends AppCompatActivity {
                 adapter.setEvents(events);
                 TextView summaryView = findViewById(R.id.usage_summary);
                 summaryView.setText(summary);
+
+                // Binding finished, kill proxy
+                shimmerContainer.stopShimmer();
+                shimmerContainer.setVisibility(android.view.View.GONE);
             });
         });
     }

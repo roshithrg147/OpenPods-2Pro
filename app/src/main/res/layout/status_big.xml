@@ -1,160 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bgColorPrimary"
+    android:background="?attr/colorSurface"
+    android:orientation="horizontal"
+    android:baselineAligned="false"
     android:gravity="center"
     android:padding="@dimen/padding_default"
     tools:ignore="RtlHardcoded,ContentDescription">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/leftPod"
-        android:layout_width="@dimen/noti_status_big_pod_container"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true">
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center">
+        
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/leftPodImg"
+                android:layout_width="@dimen/noti_status_big_pod_width"
+                android:layout_height="@dimen/noti_status_big_item_height"
+                android:layout_marginBottom="6dp"
+                android:src="@drawable/pod" />
+            <ImageView
+                android:id="@+id/leftInEarImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/leftPodImg"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/ic_inear_24dp" />
+        </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/leftPodImg"
-            android:layout_width="@dimen/noti_status_big_pod_width"
-            android:layout_height="@dimen/noti_status_big_item_height"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="6dp"
-            android:src="@drawable/pod" />
-
-        <ImageView
-            android:id="@+id/leftInEarImg"
+        <LinearLayout 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/leftPodImg"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="8dp"
-            android:src="@drawable/ic_inear_24dp" />
-
-        <TextView
-            android:id="@+id/leftPodText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/leftPodImg"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:textColor="@color/textColorPrimary" />
-
-        <ImageView
-            android:id="@+id/leftBatImg"
-            android:layout_width="@dimen/noti_status_bat_size"
-            android:layout_height="@dimen/noti_status_bat_size"
-            android:layout_below="@id/leftPodImg"
-            android:layout_toRightOf="@id/leftPodText"
-            android:src="@drawable/ic_battery_charging_full_green_24dp" />
-
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/leftPodText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColor" />
+            <ImageView
+                android:id="@+id/leftBatImg"
+                android:layout_width="@dimen/noti_status_bat_size"
+                android:layout_height="@dimen/noti_status_bat_size"
+                android:src="@drawable/ic_battery_charging_full_green_24dp" />
+        </LinearLayout>
+        
         <ProgressBar
             android:id="@+id/leftPodUpdating"
             style="?android:attr/progressBarStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/noti_status_big_progressbar"
-            android:layout_below="@id/leftPodImg"
-            android:gravity="center"
             android:indeterminate="true" />
+    </LinearLayout>
 
-    </RelativeLayout>
-
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/rightPod"
-        android:layout_width="@dimen/noti_status_big_pod_container"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/leftPod">
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center">
 
-        <ImageView
-            android:id="@+id/rightPodImg"
-            android:layout_width="@dimen/noti_status_big_pod_width"
-            android:layout_height="@dimen/noti_status_big_item_height"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="6dp"
-            android:scaleX="-1"
-            android:src="@drawable/pod" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/rightPodImg"
+                android:layout_width="@dimen/noti_status_big_pod_width"
+                android:layout_height="@dimen/noti_status_big_item_height"
+                android:layout_marginBottom="6dp"
+                android:scaleX="-1"
+                android:src="@drawable/pod" />
+            <ImageView
+                android:id="@+id/rightInEarImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/rightPodImg"
+                android:layout_alignParentEnd="true"
+                android:scaleX="-1"
+                android:src="@drawable/ic_inear_24dp" />
+        </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/rightInEarImg"
+        <LinearLayout 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/rightPodImg"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="8dp"
-            android:scaleX="-1"
-            android:src="@drawable/ic_inear_24dp" />
-
-        <TextView
-            android:id="@+id/rightPodText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/rightPodImg"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:textColor="@color/textColorPrimary" />
-
-        <ImageView
-            android:id="@+id/rightBatImg"
-            android:layout_width="@dimen/noti_status_bat_size"
-            android:layout_height="@dimen/noti_status_bat_size"
-            android:layout_below="@id/rightPodImg"
-            android:layout_toRightOf="@id/rightPodText"
-            android:src="@drawable/ic_battery_charging_full_green_24dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/rightPodText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColor" />
+            <ImageView
+                android:id="@+id/rightBatImg"
+                android:layout_width="@dimen/noti_status_bat_size"
+                android:layout_height="@dimen/noti_status_bat_size"
+                android:src="@drawable/ic_battery_charging_full_green_24dp" />
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/rightPodUpdating"
             style="?android:attr/progressBarStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/noti_status_big_progressbar"
-            android:layout_below="@id/rightPodImg"
-            android:gravity="center"
             android:indeterminate="true" />
+    </LinearLayout>
 
-    </RelativeLayout>
-
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/podCase"
-        android:layout_width="@dimen/noti_status_big_case_container"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/rightPod">
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/podCaseImg"
             android:layout_width="@dimen/noti_status_big_case_width"
             android:layout_height="@dimen/noti_status_big_item_height"
-            android:layout_centerHorizontal="true"
             android:layout_marginBottom="6dp"
             android:src="@drawable/pod_case" />
 
-        <TextView
-            android:id="@+id/podCaseText"
+        <LinearLayout 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/podCaseImg"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:textColor="@color/textColorPrimary" />
-
-        <ImageView
-            android:id="@+id/caseBatImg"
-            android:layout_width="@dimen/noti_status_bat_size"
-            android:layout_height="@dimen/noti_status_bat_size"
-            android:layout_below="@id/podCaseImg"
-            android:layout_toRightOf="@id/podCaseText"
-            android:src="@drawable/ic_battery_charging_full_green_24dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/podCaseText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColor" />
+            <ImageView
+                android:id="@+id/caseBatImg"
+                android:layout_width="@dimen/noti_status_bat_size"
+                android:layout_height="@dimen/noti_status_bat_size"
+                android:src="@drawable/ic_battery_charging_full_green_24dp" />
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/podCaseUpdating"
             style="?android:attr/progressBarStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/noti_status_big_progressbar"
-            android:layout_below="@id/podCaseImg"
-            android:gravity="center"
             android:indeterminate="true" />
+    </LinearLayout>
 
-    </RelativeLayout>
-
-</RelativeLayout>
+</LinearLayout>
